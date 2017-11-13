@@ -11,7 +11,7 @@ int modeLight;
 bool lightEnable;
 
 void enableLight() {
-	//glShadeModel(GL_FLAT);  // однотонная заливка без сглаживания (лучше рельеф виден на 
+	glShadeModel(GL_FLAT);  // однотонная заливка без сглаживания (лучше рельеф виден на 
 	//буквах)
 	// по умолчанию GL_SMOOTH - сглаживание разрешено
 
@@ -23,7 +23,7 @@ void enableLight() {
 	GLfloat mat_spec[] = { (GLfloat)0.0,  (GLfloat)0.4,  (GLfloat)0.4,  (GLfloat)1.0 }; // зеркальный цвет материала
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_dif);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_amb);
-	// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_spec); 
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_spec); 
 
 	//установка источников света
 	switch (modeLight) {
@@ -310,7 +310,7 @@ void drawLetterK(float height) {
 	//glEnd();
 
 	//back K
-	glColor3ub(104, 120, 56);
+	glColor3ub(104, 110, 56);
 	glBegin(GL_POLYGON);//Left figure
 	glNormal3f(0., 0., -1); 
 	for (float i = -2.; i < 3.; i += 0.01) {
@@ -354,7 +354,7 @@ void drawLetterK(float height) {
 	glVertex3f(1.5*height + 3.7*height, -2. * height, height-height);
 	glVertex3f(0.4*height + 3.7*height, -2. * height, height-height);*/
 	glEnd();
-	glColor3ub(123, 54, 0);
+	glColor3ub(200, 54, 60);
 	//bottom squares
 	glBegin(GL_QUADS);
 	glNormal3f(0., -1., 0);
@@ -413,8 +413,7 @@ void drawLetterK(float height) {
 	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);
 	glEnd();
 
-	//this
-	glColor3ub(255, 120, 130);
+	
 	//left wall
 	glBegin(GL_QUADS);
 	glNormal3f(1., 0., 0);
@@ -431,7 +430,6 @@ void drawLetterK(float height) {
 	//glVertex3f(1.7*height, -2.*height, height);//right bottom
 	glEnd();
 
-	glColor3ub(10, 150, 130);
 	//right wall
 	glBegin(GL_QUADS);
 	glNormal3f(1., 0., 0);
@@ -448,9 +446,6 @@ void drawLetterK(float height) {
 	//glVertex3f(-1 * height + 3.7*height, -2.*height, height - height);//left bottom
 	//glVertex3f(-1.*height + 3.7*height, -2.*height, height);//right bottom
 	glEnd();
-
-	//this
-	glColor3ub(10, 20, 20);
 	glBegin(GL_QUADS);
 	glNormal3f(1., -1., 0);
 	for (float i = 2.7, j = 1.5; i < 3.8 - 0.011; i += 0.011, j +=0.015) {
@@ -466,7 +461,6 @@ void drawLetterK(float height) {
 	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);*/
 	glEnd();
 
-	glColor3ub(1, 20, 130);
 	glBegin(GL_QUADS);
 	glNormal3f(-1., 1., 0);
 	for (float i = 3.1, j = 0.7; i < 5.2 - 0.021; i += 0.021, j -= 0.027) {
@@ -480,13 +474,9 @@ void drawLetterK(float height) {
 	glVertex3f(1.5*height + 3.7*height, -2. * height, height);
 	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);*/
 	glEnd();
-
-	glColor3ub(0, 0, 0);
 	glBegin(GL_QUADS);
 	glNormal3f(1., -1., 0);
-	int k = 1;
 	for (float i = 2.5, j = 0.05; i < 4.1; i += 0.016, j -= 0.0205) {
-		glColor3ub(k++, 1, 1);
 		glVertex3f(i*height, j*height, 0);
 		glVertex3f(i*height, j*height, height);
 		glVertex3f((i + 0.016)*height, (j - 0.0205) * height, height);
@@ -498,7 +488,6 @@ void drawLetterK(float height) {
 	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);*/
 	glEnd();
 
-	glColor3ub(255, 0, 0);
 	glBegin(GL_QUADS);//top trap wall
 	glNormal3f(-1., 1., 0);
 	for (float i = 2.7, j = 0; i < 4.7 - 0.02; i += 0.02, j += 0.03) {
@@ -764,7 +753,6 @@ int main(int argc, char* argv[])
 	glutSpecialFunc(DetectSpecKeys);
 	glutKeyboardFunc(DetectKeys);
 	glutMainLoop();
-	
 
 	return 0;
 }
