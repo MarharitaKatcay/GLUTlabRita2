@@ -735,6 +735,7 @@ void ChangeWindowSize(int width, int height)
 
 int main(int argc, char* argv[])
 {
+
 	modeLight = 0;
 	lightEnable = false;
 	glutInit(&argc, argv);
