@@ -1,36 +1,35 @@
-#include <conio.h>
+п»ї#include <conio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <glut.h>
 #include <windows.h>
-#include <glut.h>
 
 int Kx, Ky, Kz, Mx, My, Mz;
-int angleMx, angleMy, angleMz, angleKx, angleKy, angleKz;
+int angleMx, angleMy=30, angleMz, angleKx, angleKy=30, angleKz;
 int modeLight;
 bool lightEnable;
 
 void enableLight() {
-	glShadeModel(GL_FLAT);  // однотонная заливка без сглаживания (лучше рельеф виден на 
-	//буквах)
-	// по умолчанию GL_SMOOTH - сглаживание разрешено
+	//glShadeModel(GL_FLAT);  // РѕРґРЅРѕС‚РѕРЅРЅР°СЏ Р·Р°Р»РёРІРєР° Р±РµР· СЃРіР»Р°Р¶РёРІР°РЅРёСЏ (Р»СѓС‡С€Рµ СЂРµР»СЊРµС„ РІРёРґРµРЅ РЅР° 
+	//Р±СѓРєРІР°С…)
+	// РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ GL_SMOOTH - СЃРіР»Р°Р¶РёРІР°РЅРёРµ СЂР°Р·СЂРµС€РµРЅРѕ
 
 
-	// освещение
-	// задаем свойства материала
-	GLfloat mat_dif[] = { (GLfloat)0.0,  (GLfloat)0.8,  (GLfloat)1.0,  (GLfloat)1.0 };   // цвет RGBA диффузной составляющей  материала
-	GLfloat mat_amb[] = { (GLfloat)0.0,  (GLfloat)0.7,  (GLfloat)0.9,  (GLfloat)1.0 }; // цвет материала в тени 
-	GLfloat mat_spec[] = { (GLfloat)0.0,  (GLfloat)0.4,  (GLfloat)0.4,  (GLfloat)1.0 }; // зеркальный цвет материала
+	// РѕСЃРІРµС‰РµРЅРёРµ
+	// Р·Р°РґР°РµРј СЃРІРѕР№СЃС‚РІР° РјР°С‚РµСЂРёР°Р»Р°
+	GLfloat mat_dif[] = { (GLfloat)0.0,  (GLfloat)0.8,  (GLfloat)1.0,  (GLfloat)1.0 };   // С†РІРµС‚ RGBA РґРёС„С„СѓР·РЅРѕР№ СЃРѕСЃС‚Р°РІР»СЏСЋС‰РµР№  РјР°С‚РµСЂРёР°Р»Р°
+	GLfloat mat_amb[] = { (GLfloat)0.0,  (GLfloat)0.7,  (GLfloat)0.9,  (GLfloat)1.0 }; // С†РІРµС‚ РјР°С‚РµСЂРёР°Р»Р° РІ С‚РµРЅРё 
+	GLfloat mat_spec[] = { (GLfloat)0.0,  (GLfloat)0.4,  (GLfloat)0.4,  (GLfloat)1.0 }; // Р·РµСЂРєР°Р»СЊРЅС‹Р№ С†РІРµС‚ РјР°С‚РµСЂРёР°Р»Р°
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_dif);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_amb);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_spec); 
 
-	//установка источников света
+	//СѓСЃС‚Р°РЅРѕРІРєР° РёСЃС‚РѕС‡РЅРёРєРѕРІ СЃРІРµС‚Р°
 	switch (modeLight) {
 	case 1: {
-		// направленный источник света
-		GLfloat light0_dif[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 }; // цвет диффузного освещения
-		GLfloat light0_dir[] = { (GLfloat)0.0,(GLfloat) 0.0, (GLfloat)-1.0, (GLfloat)0.0 };  // направление, бесконечно удаленный источник
+		// РЅР°РїСЂР°РІР»РµРЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р°
+		GLfloat light0_dif[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 }; // С†РІРµС‚ РґРёС„С„СѓР·РЅРѕРіРѕ РѕСЃРІРµС‰РµРЅРёСЏ
+		GLfloat light0_dir[] = { (GLfloat)0.0,(GLfloat) 0.0, (GLfloat)1000.0, (GLfloat)0.0 };  // РЅР°РїСЂР°РІР»РµРЅРёРµ, Р±РµСЃРєРѕРЅРµС‡РЅРѕ СѓРґР°Р»РµРЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє
 		glEnable(GL_LIGHT0);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_dif);
 		glLightfv(GL_LIGHT0, GL_POSITION, light0_dir);
@@ -38,19 +37,19 @@ void enableLight() {
 		break;
 	}
 	case 2: {
-		// точечный источник света
-		// убывание интенсивности с расстоянием  отключено (по умолчанию)
-		GLfloat light1_diffuse[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 }; // цвет диффузного освещения
-		GLfloat light1_position[] = { (GLfloat)-200.0,(GLfloat) 0.0, (GLfloat)-200.0, (GLfloat)1.0 }; // положение источника
+		// С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р°
+		// СѓР±С‹РІР°РЅРёРµ РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё СЃ СЂР°СЃСЃС‚РѕСЏРЅРёРµРј  РѕС‚РєР»СЋС‡РµРЅРѕ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)
+		GLfloat light1_diffuse[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 }; // С†РІРµС‚ РґРёС„С„СѓР·РЅРѕРіРѕ РѕСЃРІРµС‰РµРЅРёСЏ
+		GLfloat light1_position[] = { (GLfloat)0.0,(GLfloat) 0.0, (GLfloat)-200.0, (GLfloat)1.0 }; // РїРѕР»РѕР¶РµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР°
 		glEnable(GL_LIGHT1);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
 		glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 		break;
 	}
 	case 3: {
-		// точечный источник света
-		// убывание интенсивности с расстоянием
-		// задано функцией f(d) = 1.0 / (0.015 * d * d + 0.01 * d)
+		// С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р°
+		// СѓР±С‹РІР°РЅРёРµ РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё СЃ СЂР°СЃСЃС‚РѕСЏРЅРёРµРј
+		// Р·Р°РґР°РЅРѕ С„СѓРЅРєС†РёРµР№ f(d) = 1.0 / (0.015 * d * d + 0.01 * d)
 		GLfloat light2_diffuse[] = { (GLfloat) 0.0, (GLfloat)0.6, (GLfloat)0.8 };
 		GLfloat light2_position[] = { (GLfloat)-200.0, (GLfloat)0.0, (GLfloat)-200.0, (GLfloat)1.0 };
 		glEnable(GL_LIGHT2);
@@ -62,15 +61,15 @@ void enableLight() {
 		break;
 	}
 	case 4: {
-		// прожектор
-		// убывание интенсивности с расстоянием отключено (по умолчанию)
-		// половина угла при вершине 50 градусов
-		// направление на центр плоскости
-		GLfloat light3_diffuse[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 };  // цвет диффузного света
-		GLfloat light3_amb[] = { (GLfloat)0.0, (GLfloat)0.3, (GLfloat)0.4 };       // цвет рассеянного света
-		GLfloat light3_spec[] = { (GLfloat)0.0, (GLfloat)0.7, (GLfloat)0.9 };    // цвет зеркального света
-		GLfloat light3_position[] = { (GLfloat)290.0, (GLfloat)150.0, (GLfloat)-60.0, (GLfloat)1.0 };  // положение прожектора
-		GLfloat light3_spot_direction[] = { (GLfloat)-20.0, (GLfloat)-20.0, (GLfloat)0.0 };  // направление прожектора
+		// РїСЂРѕР¶РµРєС‚РѕСЂ
+		// СѓР±С‹РІР°РЅРёРµ РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё СЃ СЂР°СЃСЃС‚РѕСЏРЅРёРµРј РѕС‚РєР»СЋС‡РµРЅРѕ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)
+		// РїРѕР»РѕРІРёРЅР° СѓРіР»Р° РїСЂРё РІРµСЂС€РёРЅРµ 50 РіСЂР°РґСѓСЃРѕРІ
+		// РЅР°РїСЂР°РІР»РµРЅРёРµ РЅР° С†РµРЅС‚СЂ РїР»РѕСЃРєРѕСЃС‚Рё
+		GLfloat light3_diffuse[] = { (GLfloat)0.0, (GLfloat)0.6, (GLfloat)0.8 };  // С†РІРµС‚ РґРёС„С„СѓР·РЅРѕРіРѕ СЃРІРµС‚Р°
+		GLfloat light3_amb[] = { (GLfloat)0.0, (GLfloat)0.3, (GLfloat)0.4 };       // С†РІРµС‚ СЂР°СЃСЃРµСЏРЅРЅРѕРіРѕ СЃРІРµС‚Р°
+		GLfloat light3_spec[] = { (GLfloat)0.0, (GLfloat)0.7, (GLfloat)0.9 };    // С†РІРµС‚ Р·РµСЂРєР°Р»СЊРЅРѕРіРѕ СЃРІРµС‚Р°
+		GLfloat light3_position[] = { (GLfloat)590.0, (GLfloat)150.0, (GLfloat)-60.0, (GLfloat)1.0 };  // РїРѕР»РѕР¶РµРЅРёРµ РїСЂРѕР¶РµРєС‚РѕСЂР°
+		GLfloat light3_spot_direction[] = { (GLfloat)0.0, (GLfloat)-20.0, (GLfloat)-700.0 };  // РЅР°РїСЂР°РІР»РµРЅРёРµ РїСЂРѕР¶РµРєС‚РѕСЂР°
 		glEnable(GL_LIGHT3);
 		glLightfv(GL_LIGHT3, GL_DIFFUSE, light3_diffuse);
 		glLightfv(GL_LIGHT3, GL_AMBIENT, light3_amb);
@@ -90,25 +89,42 @@ void drawLetterM(float height) {
 		0., 0., height*10,
 		0., 0., 0.,
 		0., 1., 0.);
-
-	glTranslatef(Mx, My, Mz);
 	glRotatef(angleMx, 1., 0., 0.);
 	glRotatef(angleMy, 0., 1., 0.);
 	glRotatef(angleMz, 0., 0., 1.);
-
+	glTranslatef(Mx, My, Mz);
+	
 	glColor3ub(250, 198, 0);
+	//glBegin(GL_POLYGON);// V figure for M
+	//glNormal3f(0., 0., 1.);
+	//glVertex3f(0-height, 0 , height);//center V bottom
+	//glVertex3f(2.*height - height, 2.*height , height);//right V bottom
+	//glVertex3f(2.*height - height, 3.*height , height);//right V top
+	//glVertex3f(0-height, height, height);//center V top
+	//glVertex3f(-2.*height - height, 3.*height , height);//left V top
+	//glVertex3f(-2.*height - height, 2.*height , height);//left V bottom
+	//glEnd();
+
+
 	glBegin(GL_POLYGON);// V figure for M
-	glNormal3f(0., 0., -1.);
-	glVertex3f(0-height, 0 , height);//center V bottom
-	glVertex3f(2.*height - height, 2.*height , height);//right V bottom
-	glVertex3f(2.*height - height, 3.*height , height);//right V top
-	glVertex3f(0-height, height, height);//center V top
-	glVertex3f(-2.*height - height, 3.*height , height);//left V top
-	glVertex3f(-2.*height - height, 2.*height , height);//left V bottom
+	glNormal3f(0., 0., 1.);
+	glVertex3f(0 - height, 0, height);//center V bottom
+	glVertex3f(2.*height - height, 2.*height, height);//right V bottom
+	glVertex3f(2.*height - height, 3.*height, height);//right V top
+	glVertex3f(0 - height, height, height);//center V top
 	glEnd();
 
-	glBegin(GL_POLYGON);//Left figure
+	glBegin(GL_POLYGON);// V figure for M
 	glNormal3f(0., 0., -1.);
+	glVertex3f(0 - height, 0, height);//center V bottom
+	glVertex3f(-2.*height - height, 2.*height, height);//left V bottom
+	glVertex3f(-2.*height - height, 3.*height, height);//left V top
+	glVertex3f(0 - height, height, height);//center V top
+	glEnd();
+
+
+	glBegin(GL_POLYGON);//Left figure
+	glNormal3f(0., 0., 1.);
 	glVertex3f(-height - height, 2. * height-1.*height, height);//right top
 	glVertex3f(-2.*height - height, 2. * height, height);//left top
 	glVertex3f(-2.*height - height, -2.*height , height);//left bottom
@@ -117,7 +133,7 @@ void drawLetterM(float height) {
 
 	
 	glBegin(GL_POLYGON);//right figure
-	glNormal3f(0., 0., 1.);
+	glNormal3f(0., 0., -1.);
 	glVertex3f(height - height, 2. * height-height, height);//left top
 	glVertex3f(2*height - height, 2. * height, height);//right top
 	glVertex3f(2. * height - height, -2.*height, height);//right bottom
@@ -128,7 +144,7 @@ void drawLetterM(float height) {
 
 	//left bottom square
 	glBegin(GL_QUADS);
-	glNormal3f(0., -1., 0.);
+	glNormal3f(0., 1., 0.);
 	glVertex3f(-2.*height - height, -2.*height, height);//left bottom
 	glVertex3f(-height - height, -2.*height, height);//right bottom
 	glVertex3f(-height - height, -2.*height, height-height);
@@ -137,7 +153,7 @@ void drawLetterM(float height) {
 
 	//right bottom square
 	glBegin(GL_QUADS);
-	glNormal3f(0., 1., 0.);
+	glNormal3f(0., -1., 0.);
 	glVertex3f(2. * height - height, -2.*height, height);//right bottom
 	glVertex3f(height - height, -2.*height, height);//left bottom
 	glVertex3f(height - height, -2.*height, height-height);
@@ -148,7 +164,7 @@ void drawLetterM(float height) {
 
 	//back right figure
 	glBegin(GL_POLYGON);
-	glNormal3f(0., 0., 1.);
+	glNormal3f(0., 0., -1.);
 	glVertex3f(height - height, 2. * height - height, height-height);//backleft top
 	glVertex3f(2 * height - height, 2. * height, height-height);//back right top
 	glVertex3f(2. * height - height, -2.*height, height-height);//back right bottom
@@ -157,7 +173,7 @@ void drawLetterM(float height) {
 
 	//back left figure
 	glBegin(GL_POLYGON);//Left figure
-	glNormal3f(0., 0., -1.);
+	glNormal3f(0., 0., 1.);
 	glVertex3f(-height - height, 2. * height - 1.*height, height-height);//back right top
 	glVertex3f(-2.*height - height, 2. * height, height-height);//back left top
 	glVertex3f(-2.*height - height, -2.*height, height-height);//back left bottom
@@ -165,21 +181,37 @@ void drawLetterM(float height) {
 	glEnd();
 
 	//back V figure
+	//glBegin(GL_POLYGON);// V figure for M
+	//glNormal3f(0., 0., 1.);
+	//glVertex3f(0 - height, 0, height-height);//back center V bottom
+	//glVertex3f(2.*height - height, 2.*height, height-height);//back right V bottom
+	//glVertex3f(2.*height - height, 3.*height, height-height);//back right V top
+	//glVertex3f(0-height, height, height-height);//back center V top
+	//glVertex3f(-2.*height - height, 3.*height, height-height);//back left V top
+	//glVertex3f(-2.*height - height, 2.*height, height-height);//back left V bottom
+	//glEnd();
+
+	glBegin(GL_POLYGON);// V figure for M
+	glNormal3f(0., 0., 1.);
+	glVertex3f(0 - height, 0, 0);//center V bottom
+	glVertex3f(2.*height - height, 2.*height, 0);//right V bottom
+	glVertex3f(2.*height - height, 3.*height, 0);//right V top
+	glVertex3f(0 - height, height, 0);//center V top
+	glEnd();
+
 	glBegin(GL_POLYGON);// V figure for M
 	glNormal3f(0., 0., -1.);
-	glVertex3f(0 - height, 0, height-height);//back center V bottom
-	glVertex3f(2.*height - height, 2.*height, height-height);//back right V bottom
-	glVertex3f(2.*height - height, 3.*height, height-height);//back right V top
-	glVertex3f(0-height, height, height-height);//back center V top
-	glVertex3f(-2.*height - height, 3.*height, height-height);//back left V top
-	glVertex3f(-2.*height - height, 2.*height, height-height);//back left V bottom
+	glVertex3f(0 - height, 0, 0);//center V bottom
+	glVertex3f(-2.*height - height, 2.*height, 0);//left V bottom
+	glVertex3f(-2.*height - height, 3.*height, 0);//left V top
+	glVertex3f(0 - height, height, 0);//center V top
 	glEnd();
 
 	glColor3ub(120, 100, 160);
 
 	//right wall
 	glBegin(GL_POLYGON);
-	glNormal3f(-1., 0., 0.);
+	glNormal3f(1., 0., 0.);
 	glVertex3f(2.*height - height, 3.*height, height - height);//back right V top
 	glVertex3f(2.*height - height, 3.*height, height);// right V top
 	glVertex3f(2. * height - height, -2.*height, height);//right bottom
@@ -188,7 +220,7 @@ void drawLetterM(float height) {
 
 	//right inside wall
 	glBegin(GL_POLYGON);
-	glNormal3f(-1., 0., 0.);
+	glNormal3f(1., 0., 0.);
 	glVertex3f(1. * height - height, -2.*height, height);//right bottom
 	glVertex3f(1. * height - height, -2.*height, height - height);
 	glVertex3f(height - height, 2. * height - height, height - height);//backleft top
@@ -196,7 +228,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);//Left figure left
-	glNormal3f(-1., 0., 0.);
+	glNormal3f(1., 0., 0.);
 	glVertex3f(-2.*height - height, 3. * height, 0);//left top
 	glVertex3f(-2.*height - height, 3. * height, height);//left top
 	glVertex3f(-2.*height - height, -2.*height, height);//left bottom
@@ -204,7 +236,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);// V figure for M top right
-	glNormal3f(1., -1., 0.);
+	glNormal3f(-1., 1., 0.);
 	glVertex3f(2.*height - height, 3.*height, height);//right V bottom
 	glVertex3f(2.*height - height, 3.*height, 0);//right V bottom
 	glVertex3f(0 - height, height, 0);//center V top
@@ -212,7 +244,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);// V figure for M top left
-	glNormal3f(1., 1., 0.);
+	glNormal3f(-1., -1., 0.);
 	glVertex3f(0 - height, height, 0);//center V top
 	glVertex3f(0 - height, height, height);//center V top
 	glVertex3f(-2.*height - height, 3.*height, height);//left V top
@@ -220,7 +252,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);// V figure for M down right
-	glNormal3f(1., -1., 0.);
+	glNormal3f(-1., 1., 0.);
 	glVertex3f(0 - height, 0, 0);//center V bottom
 	glVertex3f(0 - height, 0, height);//center V bottom
 	glVertex3f(2.*height - height, 2.*height, height);//right V bottom
@@ -228,7 +260,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);// V figure for M down left
-	glNormal3f(-1., 1., 0.);
+	glNormal3f(1., -1., 0.);
 	glVertex3f(0 - height, 0, 0);//center V bottom
 	glVertex3f(0 - height, 0, height);//center V bottom
 	glVertex3f(-2.*height - height, 2.*height, height);//left V bottom
@@ -236,7 +268,7 @@ void drawLetterM(float height) {
 	glEnd();
 
 	glBegin(GL_POLYGON);//Left figure right
-	glNormal3f(-1., 0., 0.);
+	glNormal3f(1., 0., 0.);
 	glVertex3f(-height - height, 2. * height - 1.*height, 0);//right top
 	glVertex3f(-height - height, 2. * height - 1.*height, height);//right top
 	glVertex3f(-height - height, -2.*height, height);//right bottom
@@ -252,20 +284,152 @@ void drawLetterK(float height) {
 		0., 0., 0.,
 		0., 1., 0.);
 
-	glTranslatef(Kx, Ky, Kz);
 	glRotatef(angleKx, 1., 0., 0.);
 	glRotatef(angleKy, 0., 1., 0.);
 	glRotatef(angleKz, 0., 0., 1.);
+	glTranslatef(Kx, Ky, Kz);
 
 	glColor3ub(104, 16, 56);
 
-	//glBegin(GL_POLYGON);//Left figure
-	//glNormal3f(0., 0., -1);
-	//glVertex3f(-height+3.7*height, 3. * height, height);//right top
-	//glVertex3f(-2.*height + 3.7*height, 3. * height, height);//left top
-	//glVertex3f(-2.*height + 3.7*height, -2.*height, height);//left bottom
-	//glVertex3f(-height + 3.7*height, -2.*height, height);//right bottom
-	//glEnd();
+	glBegin(GL_POLYGON);//Left figure
+	glNormal3f(0., 0., 1);
+	glVertex3f(-height+3.7*height, 3. * height, height);//right top
+	glVertex3f(-2.*height + 3.7*height, 3. * height, height);//left top
+	glVertex3f(-2.*height + 3.7*height, -2.*height, height);//left bottom
+	glVertex3f(-height + 3.7*height, -2.*height, height);//right bottom
+	glEnd();
+
+	glBegin(GL_QUADS);//top trapetion
+	glNormal3f(0., 0., -1);
+	glVertex3f(-height + 3.7*height, 1.5*height, height);//left top
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height);//right top
+	glVertex3f(1.*height + 3.7*height, 3. * height, height);//right top 2
+	glVertex3f(-height + 3.7*height, 0 * height, height);//bottom
+	glEnd();
+
+	glBegin(GL_QUADS);//bottom trapetion
+	glNormal3f(0., 0., -1);
+	glVertex3f(-height + 3.7*height, 0.01*height, height);
+	glVertex3f(-0.6*height + 3.7*height+0.04*height, 0.7 * height-0.02*height, height);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height);
+	glEnd();
+
+
+	glColor3ub(104, 110, 56);
+	glBegin(GL_POLYGON);//Left figure
+	glNormal3f(0., 0., 1);
+	glVertex3f(-height + 3.7*height, 3. * height, height - height);//right top
+	glVertex3f(-2.*height + 3.7*height, 3. * height, height - height);//left top
+	glVertex3f(-2.*height + 3.7*height, -2.*height, height - height);//left bottom
+	glVertex3f(-height + 3.7*height, -2.*height, height - height);//right bottom
+	glEnd();
+
+	glBegin(GL_QUADS);//top trapetion
+	glNormal3f(0., 0., -1);
+	glVertex3f(-height + 3.7*height, 1.5*height, height - height);
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);
+	glVertex3f(1.*height + 3.7*height, 3. * height, height - height);
+	glVertex3f(-height + 3.7*height, 0 * height, height - height);
+	glEnd();
+
+	glBegin(GL_QUADS);//bottom trapetion
+	glNormal3f(0., 0., -1);
+	glVertex3f(-height + 3.7*height, 0.01*height, 0);
+	glVertex3f(-0.6*height + 3.7*height + 0.04*height, 0.7 * height - 0.02*height, 0);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);
+	glEnd();
+
+	glColor3ub(200, 54, 60);
+
+	//bottom squares
+	glBegin(GL_QUADS);
+	glNormal3f(0., 1., 0);
+	glVertex3f(-2.*height + 3.7*height, -2.*height, height);//left bottom
+	glVertex3f(-height + 3.7*height, -2.*height, height);//right bottom
+	glVertex3f(-height + 3.7*height, -2.*height, height - height);//right bottom
+	glVertex3f(-2.*height + 3.7*height, -2.*height, height - height);//left bottom
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(0., -1., 0);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);
+	glEnd();
+
+	//top squards
+	glBegin(GL_QUADS);
+	glNormal3f(0., 1., 0);
+	glVertex3f(-2.*height + 3.7*height, 3.*height, height);//left bottom
+	glVertex3f(-height + 3.7*height, 3.*height, height);//right bottom
+	glVertex3f(-height + 3.7*height, 3.*height, height - height);//right bottom
+	glVertex3f(-2.*height + 3.7*height, 3.*height, height - height);//left bottom
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	glNormal3f(0., 1., 0);
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height);//right top
+	glVertex3f(1.*height + 3.7*height, 3. * height, height);//right top 2
+	glVertex3f(1.*height + 3.7*height, 3. * height, height - height);
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);
+	glEnd();
+
+	//left wall
+	glBegin(GL_QUADS);
+	glNormal3f(-1., 0., 0);
+	glVertex3f(1.7*height, 3. * height, height);//right top
+	glVertex3f(1.7*height, 3. * height, height - height);//right top
+	glVertex3f(1.7*height, -2.*height, height - height);//left bottom
+	glVertex3f(1.7*height, -2.*height, height);//right bottom
+	glEnd();
+
+	//right wall
+	glBegin(GL_QUADS);
+	glNormal3f(-1., 0., 0);
+	glVertex3f(-1 * height + 3.7*height, 3. * height, height);//right top
+	glVertex3f(-1 * height + 3.7*height, 3. * height, height - height);//right top
+	glVertex3f(-1 * height + 3.7*height, -2.*height, height - height);//left bottom
+	glVertex3f(-1.*height + 3.7*height, -2.*height, height);//right bottom
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(-1., 1., 0);
+	glVertex3f(-height + 3.7*height, 1.5*height, height - height);
+	glVertex3f(-height + 3.7*height, 1.5*height, height);
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height);
+	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);
+	glEnd();
+	
+	glBegin(GL_POLYGON);
+	glNormal3f(1., -1., 0);
+	glVertex3f(-0.6*height + 3.7*height + 0.04*height, 0.7 * height - 0.02*height, 0);
+	glVertex3f(-0.6*height + 3.7*height + 0.04*height, 0.7 * height - 0.02*height, height);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height);
+	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(-1., 1., 0);
+	glVertex3f(-height + 3.7*height, 0.01*height, 0);
+	glVertex3f(-height + 3.7*height, 0.01*height, height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height);
+	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);
+	glEnd();
+
+	glBegin(GL_QUADS);//top trap wall
+	glNormal3f(1., -1., 0);
+	glVertex3f(1.*height + 3.7*height, 3. * height, height - height);
+	glVertex3f(1.*height + 3.7*height, 3. * height, height);
+	glVertex3f(-height + 3.7*height, 0 * height, height);
+	glVertex3f(-height + 3.7*height, 0 * height, height - height); 
+	glEnd();
+
+	//*********************************************************************
+	/*
 	glBegin(GL_QUADS);//Left figure
 	glNormal3f(0., 0., -1);
 	for (float i = -2.; i < 3.; i += 0.01) {
@@ -275,7 +439,7 @@ void drawLetterK(float height) {
 		glVertex3f(-height + 3.7*height, i*height, height);//right bottom
 	}
 	glEnd();
-	
+
 
 	glBegin(GL_QUADS);//top trapetion
 	glNormal3f(0., 0., 1);
@@ -285,10 +449,6 @@ void drawLetterK(float height) {
 		glVertex3f((i2+0.02)*height, (j2+0.03) * height, height);//right top 2
 		glVertex3f(i2*height, j2 * height, height);//bottom
 	}
-	//glVertex3f(-height + 3.7*height, 1.5*height, height);//left top
-	//glVertex3f(0.1*height + 3.7*height, 3. * height, height);//right top
-	//glVertex3f(1.*height + 3.7*height, 3. * height, height);//right top 2
-	//glVertex3f(-height + 3.7*height, 0 * height, height);//bottom
 	glEnd();
 
 	glBegin(GL_QUADS);//bottom trapetion
@@ -301,13 +461,6 @@ void drawLetterK(float height) {
 	}
 	glEnd();
 
-	//glBegin(GL_QUADS);//bottom trapetion
-	//glNormal3f(0., 0., 1);
-	//glVertex3f(-height - 0.2*height + 3.7*height, 0.05*height, height);
-	//glVertex3f(-0.6*height + 3.7*height, 0.7 * height, height);
-	//glVertex3f(1.5*height + 3.7*height, -2. * height, height);
-	//glVertex3f(0.4*height + 3.7*height, -2. * height, height);
-	//glEnd();
 
 	//back K
 	glColor3ub(104, 110, 56);
@@ -319,11 +472,6 @@ void drawLetterK(float height) {
 		glVertex3f(-2.*height + 3.7*height, i*height, 0);//left bottom
 		glVertex3f(-height + 3.7*height, i*height, 0);//right bottom
 	}
-	//glVertex3f(-height + 3.7*height, 3. * height, height - height);//right top
-	//glVertex3f(-2.*height + 3.7*height, 3. * height, height - height);//left top
-	//glVertex3f(-2.*height + 3.7*height, -2.*height, height - height);//left bottom
-	//glVertex3f(-height + 3.7*height, -2.*height, height - height);//right bottom
-
 	glEnd();
 
 	glBegin(GL_QUADS);//top trapetion
@@ -334,11 +482,6 @@ void drawLetterK(float height) {
 		glVertex3f((i2 + 0.02)*height, (j2 + 0.03) * height, 0);//right top 2
 		glVertex3f(i2*height, j2 * height, 0);//bottom
 	}
-/*
-	glVertex3f(-height + 3.7*height, 1.5*height, height-height);
-	glVertex3f(0.1*height + 3.7*height, 3. * height, height-height);
-	glVertex3f(1.*height + 3.7*height, 3. * height, height-height);
-	glVertex3f(-height + 3.7*height, 0 * height, height-height);*/
 	glEnd();
 
 	glBegin(GL_QUADS);//bottom trapetion
@@ -349,10 +492,6 @@ void drawLetterK(float height) {
 		glVertex3f((i2 + 0.021)*height, (j2 - 0.027) * height, 0);
 		glVertex3f((i1 + 0.016)*height, (j1 - 0.0205) * height, 0);
 	}
-	/*glVertex3f(-height - 0.2*height + 3.7*height, 0.05*height, height-height);
-	glVertex3f(-0.6*height + 3.7*height, 0.7 * height, height-height);
-	glVertex3f(1.5*height + 3.7*height, -2. * height, height-height);
-	glVertex3f(0.4*height + 3.7*height, -2. * height, height-height);*/
 	glEnd();
 	glColor3ub(200, 54, 60);
 	//bottom squares
@@ -364,15 +503,7 @@ void drawLetterK(float height) {
 		glVertex3f(2.7*height, -2.*height, i*height);//right bottom
 		glVertex3f(1.7*height, -2.*height, i*height);//left bottom
 	}
-	
-
-	//glVertex3f(-2.*height + 3.7*height, -2.*height, height);//left bottom
-	//glVertex3f(-height + 3.7*height, -2.*height, height);//right bottom
-	//glVertex3f(-height + 3.7*height, -2.*height, height - height);//right bottom
-	//glVertex3f(-2.*height + 3.7*height, -2.*height, height - height);//left bottom
-
 	glEnd();
-
 	glBegin(GL_QUADS);
 	glNormal3f(0., 1., 0);
 	for (float i = 0; i < 1; i += 0.034) {
@@ -381,14 +512,7 @@ void drawLetterK(float height) {
 		glVertex3f(4.1*height, -2. * height, i*height);
 		glVertex3f(5.2*height, -2. * height, i*height);
 	}
-	
-
-	/*glVertex3f(1.5*height + 3.7*height, -2. * height, height);
-	glVertex3f(0.4*height + 3.7*height, -2. * height, height);
-	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);
-	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);*/
 	glEnd();
-
 	//top squards
 	glBegin(GL_QUADS);
 	glNormal3f(0., -1., 0);
@@ -398,22 +522,7 @@ void drawLetterK(float height) {
 		glVertex3f(2.7*height, 3.*height, i*height);//right bottom
 		glVertex3f(1.7*height, 3.*height, i*height);//left bottom
 	}
-	
-	//glVertex3f(-2.*height + 3.7*height, 3.*height, height);//left bottom
-	//glVertex3f(-height + 3.7*height, 3.*height, height);//right bottom
-	//glVertex3f(-height + 3.7*height, 3.*height, height - height);//right bottom
-	//glVertex3f(-2.*height + 3.7*height, 3.*height, height - height);//left bottom
 	glEnd();
-
-	glBegin(GL_QUADS);
-	glNormal3f(0., -1., 0);
-	glVertex3f(0.1*height + 3.7*height, 3. * height, height);//right top
-	glVertex3f(1.*height + 3.7*height, 3. * height, height);//right top 2
-	glVertex3f(1.*height + 3.7*height, 3. * height, height - height);
-	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);
-	glEnd();
-
-	
 	//left wall
 	glBegin(GL_QUADS);
 	glNormal3f(1., 0., 0);
@@ -423,13 +532,7 @@ void drawLetterK(float height) {
 		glVertex3f(1.7*height, i*height, 0);//left bottom
 		glVertex3f(1.7*height, i*height,height);//right bottom
 	}
-	
-	//glVertex3f(1.7*height, 3. * height, height);//right top
-	//glVertex3f(1.7*height, 3. * height, height - height);//right top
-	//glVertex3f(1.7*height, -2.*height, height - height);//left bottom
-	//glVertex3f(1.7*height, -2.*height, height);//right bottom
 	glEnd();
-
 	//right wall
 	glBegin(GL_QUADS);
 	glNormal3f(1., 0., 0);
@@ -439,26 +542,16 @@ void drawLetterK(float height) {
 		glVertex3f(2.7*height, i*height, 0);//left bottom
 		glVertex3f(2.7*height, i*height, height);//right bottom
 	}
-
-
-	//glVertex3f(-1 * height + 3.7*height, 3. * height, height);//right top
-	//glVertex3f(-1 * height + 3.7*height, 3. * height, height - height);//right top
-	//glVertex3f(-1 * height + 3.7*height, -2.*height, height - height);//left bottom
-	//glVertex3f(-1.*height + 3.7*height, -2.*height, height);//right bottom
 	glEnd();
+
 	glBegin(GL_QUADS);
 	glNormal3f(1., -1., 0);
 	for (float i = 2.7, j = 1.5; i < 3.8 - 0.011; i += 0.011, j +=0.015) {
-		glVertex3f(i*height, j*height, 0);
-		glVertex3f(i*height, j*height, height);
-		glVertex3f((i+0.011)*height, (j+0.015) * height, height);
-		glVertex3f((i+0.011)*height, (j + 0.015) * height, 0);
+	glVertex3f(i*height, j*height, 0);
+	glVertex3f(i*height, j*height, height);
+	glVertex3f((i+0.011)*height, (j+0.015) * height, height);
+	glVertex3f((i+0.011)*height, (j + 0.015) * height, 0);
 	}
-/*
-	glVertex3f(-height + 3.7*height, 1.5*height, height - height);
-	glVertex3f(-height + 3.7*height, 1.5*height, height);
-	glVertex3f(0.1*height + 3.7*height, 3. * height, height);
-	glVertex3f(0.1*height + 3.7*height, 3. * height, height - height);*/
 	glEnd();
 
 	glBegin(GL_QUADS);
@@ -469,23 +562,15 @@ void drawLetterK(float height) {
 		glVertex3f((i + 0.021)*height, (j - 0.027) * height, height);
 		glVertex3f((i + 0.021)*height, (j - 0.027) * height, 0);
 	}
-	/*glVertex3f(-0.6*height + 3.7*height, 0.7 * height, height - height);
-	glVertex3f(-0.6*height + 3.7*height, 0.7 * height, height);
-	glVertex3f(1.5*height + 3.7*height, -2. * height, height);
-	glVertex3f(1.5*height + 3.7*height, -2. * height, height - height);*/
 	glEnd();
 	glBegin(GL_QUADS);
 	glNormal3f(1., -1., 0);
 	for (float i = 2.5, j = 0.05; i < 4.1; i += 0.016, j -= 0.0205) {
-		glVertex3f(i*height, j*height, 0);
-		glVertex3f(i*height, j*height, height);
-		glVertex3f((i + 0.016)*height, (j - 0.0205) * height, height);
-		glVertex3f((i + 0.016)*height, (j - 0.0205) * height, 0);
+	glVertex3f(i*height, j*height, 0);
+	glVertex3f(i*height, j*height, height);
+	glVertex3f((i + 0.016)*height, (j - 0.0205) * height, height);
+	glVertex3f((i + 0.016)*height, (j - 0.0205) * height, 0);
 	}
-	/*glVertex3f(-height - 0.2*height + 3.7*height, 0.05*height, height - height);
-	glVertex3f(-height - 0.2*height + 3.7*height, 0.05*height, height);
-	glVertex3f(0.4*height + 3.7*height, -2. * height, height);
-	glVertex3f(0.4*height + 3.7*height, -2. * height, height - height);*/
 	glEnd();
 
 	glBegin(GL_QUADS);//top trap wall
@@ -496,11 +581,9 @@ void drawLetterK(float height) {
 		glVertex3f((i+0.02)*height, (j+0.03) * height, height);
 		glVertex3f((i + 0.02)*height, (j + 0.03) * height, 0);
 	}
-	/*glVertex3f(1.*height + 3.7*height, 3. * height, height - height);
-	glVertex3f(1.*height + 3.7*height, 3. * height, height);
-	glVertex3f(-height + 3.7*height, 0 * height, height);
-	glVertex3f(-height + 3.7*height, 0 * height, height - height);*/
 	glEnd();
+	*/
+
  }
 
 void DetectSpecKeys(int key, int x, int y)
@@ -539,6 +622,36 @@ void DetectSpecKeys(int key, int x, int y)
 	case GLUT_KEY_PAGE_DOWN: {
 		Kz -= 10;
 		Mz -= 10;
+		break;
+	}
+	case GLUT_KEY_F1: {
+		angleMx += 10;
+		angleKx += 10;
+		break;
+	}
+	case GLUT_KEY_F2: {
+		angleMx -= 10;
+		angleKx -= 10;
+		break;
+	}
+	case GLUT_KEY_F3: {
+		angleMy += 10;
+		angleKy += 10;
+		break;
+	}
+	case GLUT_KEY_F4: {
+		angleMy -= 10;
+		angleKy -= 10;
+		break;
+	}
+	case GLUT_KEY_F5: {
+		angleMz += 10;
+		angleKz += 10;
+		break;
+	}
+	case GLUT_KEY_F6: {
+		angleMz -= 10;
+		angleKz -= 10;
 		break;
 	}
 	}
@@ -646,6 +759,7 @@ void DetectKeys(unsigned char key, int x, int y)
 		Kz -= 10;
 		break;
 	}
+	
 	}
 	if (lightEnable) {
 		switch (key) {
@@ -664,7 +778,7 @@ void ExecuteMenu(int option) {
 	case 1: {
 		glDisable(GL_LIGHTING);
 		lightEnable = false;
-		glClearColor(1, 0.82, 0.8, 1.0);//устанавливает цвет, которым будет заполнен буфер кадра
+		glClearColor(1, 0.82, 0.8, 1.0);//СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С†РІРµС‚, РєРѕС‚РѕСЂС‹Рј Р±СѓРґРµС‚ Р·Р°РїРѕР»РЅРµРЅ Р±СѓС„РµСЂ РєР°РґСЂР°
 		break;
 	}
 	case 2: {
@@ -682,8 +796,8 @@ void ExecuteMenu(int option) {
 }
 void createMenu() {
 	glutCreateMenu(ExecuteMenu);
-	glutAddMenuEntry("Выключить освещение", 1);
-	glutAddMenuEntry("Включить освещение", 2);
+	glutAddMenuEntry("Р’С‹РєР»СЋС‡РёС‚СЊ РѕСЃРІРµС‰РµРЅРёРµ", 1);
+	glutAddMenuEntry("Р’РєР»СЋС‡РёС‚СЊ РѕСЃРІРµС‰РµРЅРёРµ", 2);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -705,30 +819,30 @@ void RenderScene(){
 	glDisable(GL_LIGHT7);
 
 
-	glFlush(); // В буфер вводятся команды рисования
+	glFlush(); // Р’ Р±СѓС„РµСЂ РІРІРѕРґСЏС‚СЃСЏ РєРѕРјР°РЅРґС‹ СЂРёСЃРѕРІР°РЅРёСЏ
 	glutSwapBuffers();
 }
 
 void ChangeWindowSize(int width, int height)
 {
 
-	// Предотвращаем деление на нуль
+	// РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј РґРµР»РµРЅРёРµ РЅР° РЅСѓР»СЊ
 	if (height == 0)   height = 1;
-	// Устанавливаем поле просмотра с размерами окна
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР»Рµ РїСЂРѕСЃРјРѕС‚СЂР° СЃ СЂР°Р·РјРµСЂР°РјРё РѕРєРЅР°
 	glViewport(0, 0, width, height);
-	// Устанавливает матрицу преобразования в режим проецирования
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РјР°С‚СЂРёС†Сѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІ СЂРµР¶РёРј РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	// Устанавливаем размеры перспективы (отсекающего объема)
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂС‹ РїРµСЂСЃРїРµРєС‚РёРІС‹ (РѕС‚СЃРµРєР°СЋС‰РµРіРѕ РѕР±СЉРµРјР°)
 	// (left, right, bottom, top, near, far)
-	GLfloat aspectRatio = (GLfloat)width / (GLfloat)height;// Для коррекции
+	GLfloat aspectRatio = (GLfloat)width / (GLfloat)height;// Р”Р»СЏ РєРѕСЂСЂРµРєС†РёРё
 
 	glViewport(0, 0, width, height);
-	// установить корректную перспективу
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕСЂСЂРµРєС‚РЅСѓСЋ РїРµСЂСЃРїРµРєС‚РёРІСѓ
 	gluPerspective(45.0f, aspectRatio, 1., 10000.0);
 
-	// Восстанавливает матрицу преобразования в исходный режим вида
+	// Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РјР°С‚СЂРёС†Сѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІ РёСЃС…РѕРґРЅС‹Р№ СЂРµР¶РёРј РІРёРґР°
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -744,7 +858,7 @@ int main(int argc, char* argv[])
 	glutInitWindowPosition(10, 10);
 	glutCreateWindow("Katcay, PK-15-1");
 
-	glClearColor(1, 0.82, 0.8, 1.0);//устанавливает цвет, которым будет заполнен буфер кадра
+	glClearColor(1, 0.82, 0.8, 1.0);//СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С†РІРµС‚, РєРѕС‚РѕСЂС‹Рј Р±СѓРґРµС‚ Р·Р°РїРѕР»РЅРµРЅ Р±СѓС„РµСЂ РєР°РґСЂР°
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 	createMenu();
